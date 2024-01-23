@@ -12,7 +12,11 @@ export function handleLogin(username, password) {
       password,
     })
       .then((user) => dispatch(setAuthedUser(user.id)))
-      .then(() => dispatch(hideLoading()));
+      .then(() => dispatch(hideLoading()))
+      .catch((err) => {
+        dispatch(hideLoading());
+        throw err;
+      });
   };
 }
 
