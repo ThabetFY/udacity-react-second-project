@@ -20,6 +20,14 @@ export function handleLogin(username, password) {
   };
 }
 
+export function handleLogout() {
+  return (dispatch) => {
+    dispatch(showLoading());
+    dispatch(setAuthedUser(null));
+    dispatch(hideLoading());
+  };
+}
+
 export function setAuthedUser(id) {
   return {
     type: SET_AUTHED_USER,
