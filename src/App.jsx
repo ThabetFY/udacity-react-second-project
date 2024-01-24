@@ -4,8 +4,11 @@ import LoadingBar from "react-redux-loading-bar";
 import { useNavigate, Routes, Route } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import Dashboard from "./components/Dashboard";
 import { handleInitialData } from "./store/actions/shared";
+import Dashboard from "./components/Dashboard";
+import Leaderboard from "./components/Leaderboard";
+import NewQuestion from "./components/NewQuestion";
+import QuestionPage from "./components/QuestionPage";
 import Login from "./components/Login";
 import Nav from "./components/Nav";
 
@@ -23,14 +26,15 @@ function App({ dispatch, authedUser }) {
 
   return (
     <>
-      <LoadingBar />
+      <LoadingBar className="loading-bar" />
       <div className="container">
         <Nav />
         <Routes>
           <Route path="/" exact element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/Question/:id" element={<Question />} />
-            <Route path="/new" element={<NewQuestion />} /> */}
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/new" element={<NewQuestion />} />
+          <Route path="/Question/:id" element={<QuestionPage />} />
         </Routes>
       </div>
     </>
@@ -39,6 +43,7 @@ function App({ dispatch, authedUser }) {
 
 const mapStateToProps = ({ authedUser }) => ({
   authedUser,
+  loading: authedUser === null,
 });
 
 App.propTypes = {
