@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingBar from "react-redux-loading-bar";
 import { useNavigate, Routes, Route } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -12,23 +12,20 @@ import QuestionPage from "./components/QuestionPage";
 import Login from "./components/Login";
 import Nav from "./components/Nav";
 
-function App({ dispatch, authedUser }) {
+function App() {
+  const dispatch = useDispatch();
+  const authedUser = useSelector((state) => state.authedUser);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authedUser) {
-      navigate("/login");
-    }
-    if (authedUser) {
-      dispatch(handleInitialData(authedUser));
-    }
+    authedUser ? dispatch(handleInitialData(authedUser)) : navigate("/login");
   }, [dispatch, authedUser, navigate]);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <LoadingBar />
-      <div className="hidden flex-col md:flex">
-        <Nav />
+      <Nav />
+      <main className="container mx-auto flex justify-center items-center flex-1">
         <Routes>
           <Route path="/" exact element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
@@ -36,21 +33,13 @@ function App({ dispatch, authedUser }) {
           <Route path="/new" element={<NewQuestion />} />
           <Route path="/Question/:id" element={<QuestionPage />} />
         </Routes>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
 
-const mapStateToProps = ({ authedUser }) => ({
-  authedUser,
-  loading: authedUser === null,
-});
-
 App.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   authedUser: PropTypes.string,
 };
 
-const ConnectedApp = connect(mapStateToProps)(App);
-
-export default ConnectedApp;
+export default App;

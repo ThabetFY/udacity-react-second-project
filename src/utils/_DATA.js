@@ -151,10 +151,10 @@ export function _getQuestions() {
 export function _authenticateUser({ username, password }) {
   return new Promise((resolve, reject) => {
     if (!users[username]) {
-      reject("No such user");
+      reject({ type: "username", message: "No such user" });
     }
     if (users[username].password !== password) {
-      reject("Wrong password");
+      reject({ type: "password", message: "Wrong password" });
     }
     resolve(users[username]);
   });

@@ -1,92 +1,123 @@
-import { useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import PropTypes from "prop-types";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import { handleLogin } from "../store/actions/authedUser";
 
-const Login = ({ dispatch }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+});
+
+const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    if (event.target.name === "username") {
-      setUsername(event.target.value);
-    } else if (event.target.name === "password") {
-      setPassword(event.target.value);
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const handleSubmit = async ({ username, password }) => {
+    try {
+      await dispatch(handleLogin(username, password));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      form.setError(error.type, { message: error.message });
     }
-  };
-
-  const handleBlur = (event) => {
-    event.preventDefault();
-    if (event.target.name === "username") {
-      if (event.target.value === "") {
-        setError("Username is required");
-      } else {
-        setError("");
-      }
-    } else if (event.target.name === "password") {
-      if (event.target.value === "") {
-        setError("Password is required");
-      } else {
-        setError("");
-      }
-    }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // console.log(username, password);
-
-    dispatch(handleLogin(username, password))
-      .then(() => {
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err);
-      });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Username:</label>
-      <input
-        type="text"
-        name="username"
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      <br />
-      <label>Password:</label>
-      <input
-        type="password"
-        name="password"
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      <br />
-      <input type="submit" value="Submit" />
-      {error ? (
-        <p
-          style={{
-            color: "red",
-            fontSize: "1.2rem",
-            margin: "1rem 0",
-          }}
-        >
-          {error}
-        </p>
-      ) : null}
-    </form>
+    <Card className="shadow-md rounded-lg w-1/2 ">
+      <CardHeader>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription className="text-balance">
+          Enter username and password then login to view and vote questions and
+          add new ones
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-2"
+          >
+            <FormField
+              control={form.control}
+              name="username"
+              type="text"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your username" {...field} />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.username &&
+                      form.formState.errors.username.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.password &&
+                      form.formState.errors.password.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <CardFooter className="pt-4">
+              <Button className="w-full" type="submit">
+                Submit
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 
-Login.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
-
-const connectedLogin = connect()(Login);
-
-export default connectedLogin;
+export default Login;
