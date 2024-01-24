@@ -3,32 +3,72 @@ import PropTypes from "prop-types";
 
 import Question from "./Question";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 const Dashboard = ({ doneQuestion, newQuestion }) => {
   return (
-    <div>
-      <div>
-        <h1>New Questions</h1>
-        <br />
-        <ul>
+    <div className="flex flex-col items-center justify-center min-h-screen space-y-8">
+      <Card className="text-center flex-grow size-full space-y-4">
+        <CardHeader>
+          <CardTitle>New Questions</CardTitle>
+          <CardDescription>
+            Here you find the questions that you have not voted
+          </CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex flex-wrap gap-4 ">
           {newQuestion.map((id) => (
-            <li key={id}>
-              <Question id={id} />
-            </li>
+            <Question key={id} id={id} />
           ))}
-        </ul>
-      </div>
-      <div>
-        <h1>Done</h1>
-        <br />
-        <ul>
+        </CardContent>
+      </Card>
+      <Card className="text-center flex-grow size-full space-y-4">
+        <CardHeader>
+          <CardTitle>Done</CardTitle>
+          <CardDescription>
+            Here you find the questions that you have voted
+          </CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex flex-wrap gap-4">
           {doneQuestion.map((id) => (
-            <li key={id}>
-              <Question id={id} />
-            </li>
+            <Question key={id} id={id} />
           ))}
-        </ul>
-      </div>
+        </CardContent>
+      </Card>
     </div>
+
+    // <div>
+    //   <div>
+    //     <h1>New Questions</h1>
+    //     <br />
+    //     <ul>
+    //       {newQuestion.map((id) => (
+    //         <li key={id}>
+    //           <Question id={id} />
+    //         </li>
+    //       ))}
+    //     </ul>
+    //   </div>
+    //   <div>
+    //     <h1>Done</h1>
+    //     <br />
+    //     <ul>
+    //       {doneQuestion.map((id) => (
+    //         <li key={id}>
+    //           <Question id={id} />
+    //         </li>
+    //       ))}
+    //     </ul>
+    //   </div>
+    // </div>
   );
 };
 
@@ -36,11 +76,13 @@ const mapStateToProps = ({ questions, authedUser }) => {
   const questionIds = Object.keys(questions).sort(
     (a, b) => questions[b].timestamp - questions[a].timestamp
   );
+
   const doneQuestion = questionIds.filter(
     (id) =>
       questions[id].optionOne.votes.includes(authedUser) ||
       questions[id].optionTwo.votes.includes(authedUser)
   );
+
   const newQuestion = questionIds.filter(
     (id) =>
       !questions[id].optionOne.votes.includes(authedUser) &&

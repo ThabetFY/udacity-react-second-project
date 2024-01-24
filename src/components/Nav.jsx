@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -15,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const Nav = ({ dispatch, authedUser, avatar, name }) => {
+const Nav = ({ authedUser, avatar, name }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const clickHanlder = () => {
@@ -88,16 +89,10 @@ const Nav = ({ dispatch, authedUser, avatar, name }) => {
 };
 
 const mapStateToProps = ({ authedUser, users }) => {
-  if (!authedUser) {
-    return {
-      authedUser,
-      avatar: "",
-      name: "",
-    };
-  }
+  const user = users[authedUser];
+  const avatar = user?.avatarURL || "";
+  const name = user?.name || "";
 
-  const avatar = users[authedUser].avatarURL;
-  const name = users[authedUser].name;
   return {
     authedUser,
     avatar,
@@ -106,7 +101,6 @@ const mapStateToProps = ({ authedUser, users }) => {
 };
 
 Nav.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   authedUser: PropTypes.string,
   avatar: PropTypes.string,
   name: PropTypes.string,

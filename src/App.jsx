@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingBar from "react-redux-loading-bar";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import PropTypes from "prop-types";
 
 import { handleInitialData } from "./store/actions/shared";
 import Dashboard from "./components/Dashboard";
@@ -22,10 +21,10 @@ function App() {
   }, [dispatch, authedUser, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <LoadingBar />
+    <div className="flex flex-col min-h-screen ">
+      <LoadingBar className="sticky" />
       <Nav />
-      <main className="container mx-auto flex justify-center items-center flex-1">
+      <main className="container mx-auto flex justify-center items-center flex-1 mt-8">
         <Routes>
           <Route path="/" exact element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
@@ -37,9 +36,5 @@ function App() {
     </div>
   );
 }
-
-App.propTypes = {
-  authedUser: PropTypes.string,
-};
 
 export default App;

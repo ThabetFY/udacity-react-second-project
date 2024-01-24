@@ -4,6 +4,11 @@ import PropTypes from "prop-types";
 
 import { formatDate } from "../utils/helpers";
 
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+
 const Question = ({ question }) => {
   const navigate = useNavigate();
 
@@ -19,11 +24,23 @@ const Question = ({ question }) => {
   const { id, avatar, name, timestamp } = question;
 
   return (
-    <div onClick={(e) => toQuestion(e, id)}>
-      <span>{name}</span>
-      <img src={avatar} alt={`Avatar of ${name}`} />
-      <div>{formatDate(timestamp)}</div>
-    </div>
+    <Card className="space-y-4">
+      <CardContent className="flex flex-col items-center justify-between ">
+        <Avatar className="w-16 h-16 m-4">
+          <AvatarImage src={avatar} alt={`Avatar of ${name}`} />
+          <AvatarFallback>{name.substring(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <p className="text-lg">{name}</p>
+        <Separator />
+        <p className="text-muted-foreground">{formatDate(timestamp)}</p>
+      </CardContent>
+      <Separator />
+      <CardFooter>
+        <Button onClick={(e) => toQuestion(e, id)} className="w-full">
+          Show
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

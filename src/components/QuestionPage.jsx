@@ -8,14 +8,15 @@ import { handleAddQuestionAnswer } from "../store/actions/questions";
 
 const withRouter = (Component) => {
   const ComponentWithRouterProp = (props) => {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = useParams();
     return <Component {...props} router={{ location, navigate, params }} />;
   };
 
   return ComponentWithRouterProp;
 };
+
 function QuestionPage({ dispatch, question }) {
   const [option, setOption] = useState("");
 
@@ -24,51 +25,55 @@ function QuestionPage({ dispatch, question }) {
   }, [question.votedOption]);
 
   if (question === null) {
-    return <p>{`This Question doesn't existd`}</p>;
+    return <p>{"This Question doesn't exist"}</p>;
   }
 
   const { id, avatar, name, timestamp, optionOneText, optionTwoText } =
     question;
 
-  const selectHanlder = (e) => {
+  const selectHandler = (e) => {
     e.preventDefault();
-
-    setOption(option);
-
+    setOption(e.target.value);
     dispatch(handleAddQuestionAnswer(id, e.target.value));
   };
 
   return (
     <div>
-      <h1> {`Poll by ${name}`}</h1>
+      <h1>{`Poll by ${name}`}</h1>
       <img src={avatar} alt={`Avatar of ${name}`} />
       <div>{formatDate(timestamp)}</div>
       <div>
         <h1>Would You Rather</h1>
-        <div
-          style={{
-            backgroundColor: option === "optionOne" ? "Green" : "",
-          }}
-        >
+        <div style={{ backgroundColor: option === "optionOne" ? "Green" : "" }}>
           <h2>{optionOneText}</h2>
-          <button onClick={selectHanlder} value={"optionOne"}>
-            Click
+          <button onClick={selectHandler} value={"optionOne"}>
+            Choose Option One
           </button>
         </div>
-        <div
-          style={{
-            backgroundColor: option === "optionTwo" ? "Green" : "",
-          }}
-        >
+        <div style={{ backgroundColor: option === "optionTwo" ? "Green" : "" }}>
           <h2>{optionTwoText}</h2>
-          <button onClick={selectHanlder} value={"optionTwo"}>
-            Click
+          <button onClick={selectHandler} value={"optionTwo"}>
+            Choose Option Two
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+QuestionPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  question: PropTypes.shape({
+    id: PropTypes.string,
+    avatar: PropTypes.string,
+    name: PropTypes.string,
+    timestamp: PropTypes.number,
+    votedOption: PropTypes.string,
+    optionOneText: PropTypes.string,
+    optionTwoText: PropTypes.string,
+  }),
+};
+
 const mapStateToProps = ({ questions, users, authedUser }, props) => {
   const { id } = props.router.params;
   const question = questions[id];
@@ -96,12 +101,4 @@ const mapStateToProps = ({ questions, users, authedUser }, props) => {
   };
 };
 
-QuestionPage.propTypes = {
-  dispatch: PropTypes.func,
-  question: PropTypes.object,
-};
-
-const connectedQuestionPage = withRouter(
-  connect(mapStateToProps)(QuestionPage)
-);
-export default connectedQuestionPage;
+export default withRouter(connect(mapStateToProps)(QuestionPage));
