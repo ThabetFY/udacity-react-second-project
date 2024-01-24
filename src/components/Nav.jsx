@@ -4,6 +4,17 @@ import PropTypes from "prop-types";
 
 import { handleLogout } from "../store/actions/authedUser";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const Nav = ({ dispatch, authedUser, avatar, name }) => {
   const navigate = useNavigate();
 
@@ -14,26 +25,65 @@ const Nav = ({ dispatch, authedUser, avatar, name }) => {
   };
 
   return (
-    <nav className="nav">
-      {authedUser ? (
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/leaderboard">Leaderboard</Link>
-          </li>
-          <li>
-            <Link to="/new">New</Link>
-          </li>
-          <li>
-            <img src={avatar} alt={`Avatar of ${name}`} className="avatar" />
-            <span>{name}</span>
-            <button onClick={clickHanlder}>Logout</button>
-          </li>
-        </ul>
-      ) : null}
-    </nav>
+    <div className="border-b">
+      {authedUser && (
+        <div className="flex h-16 items-center px-4">
+          <div className="mx-6">
+            <nav className="flex items-center space-x-4 lg:space-x-6">
+              <Link
+                to="/"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Home
+              </Link>
+              <Link
+                to="/leaderboard"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Leaderboard
+              </Link>
+              <Link
+                to="/new"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                New
+              </Link>
+            </nav>
+          </div>
+          <div className="ml-auto flex items-center space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={avatar} alt={`Avatar of ${name}`} />
+                    <AvatarFallback>
+                      {name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex text-center flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {authedUser}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={clickHanlder}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

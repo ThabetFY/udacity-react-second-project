@@ -26,8 +26,8 @@ function App({ dispatch, authedUser }) {
 
   return (
     <>
-      <LoadingBar className="loading-bar" />
-      <div className="container">
+      <LoadingBar />
+      <div className="hidden flex-col md:flex">
         <Nav />
         <Routes>
           <Route path="/" exact element={<Dashboard />} />
