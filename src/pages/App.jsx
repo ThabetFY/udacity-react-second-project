@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingBar from "react-redux-loading-bar";
 import { useNavigate, Routes, Route } from "react-router-dom";
 
-import { handleInitialData } from "./store/actions/shared";
-import Dashboard from "./components/Dashboard";
-import Leaderboard from "./components/Leaderboard";
-import NewQuestion from "./components/NewQuestion";
-import QuestionPage from "./components/QuestionPage";
-import Login from "./components/Login";
-import Nav from "./components/Nav";
+import { handleInitialData } from "../store/actions/shared";
+import Dashboard from "../components/Dashboard";
+import Leaderboard from "./Leaderboard";
+import NewQuestion from "./NewQuestion";
+import QuestionPage from "./QuestionPage";
+import Login from "./Login";
+import Nav from "../components/Nav";
 
 function App() {
   const dispatch = useDispatch();

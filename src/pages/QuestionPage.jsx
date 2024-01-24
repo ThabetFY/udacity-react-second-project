@@ -5,11 +5,11 @@ import PropTypes from "prop-types";
 
 import { handleAddQuestionAnswer } from "../store/actions/questions";
 
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Label } from "./ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { Label } from "../components/ui/label";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
+import { Separator } from "../components/ui/separator";
+import { Button } from "../components/ui/button";
 
 const withRouter = (Component) => {
   const ComponentWithRouterProp = (props) => {
@@ -28,7 +28,7 @@ function QuestionPage({ dispatch, question }) {
 
   useEffect(() => {
     setOption(question ? question.votedOption : "");
-  }, []);
+  }, [question ? question.votedOption : ""]);
 
   if (!question) {
     navigate("/login");
