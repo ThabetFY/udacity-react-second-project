@@ -3,8 +3,13 @@ import { connect } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { formatDate } from "../utils/helpers";
 import { handleAddQuestionAnswer } from "../store/actions/questions";
+
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Label } from "./ui/label";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
 
 const withRouter = (Component) => {
   const ComponentWithRouterProp = (props) => {
@@ -28,8 +33,7 @@ function QuestionPage({ dispatch, question }) {
     return <p>{"This Question doesn't exist"}</p>;
   }
 
-  const { id, avatar, name, timestamp, optionOneText, optionTwoText } =
-    question;
+  const { id, avatar, name, optionOneText, optionTwoText } = question;
 
   const selectHandler = (e) => {
     e.preventDefault();
@@ -38,24 +42,46 @@ function QuestionPage({ dispatch, question }) {
   };
 
   return (
-    <div>
-      <h1>{`Poll by ${name}`}</h1>
-      <img src={avatar} alt={`Avatar of ${name}`} />
-      <div>{formatDate(timestamp)}</div>
-      <div>
-        <h1>Would You Rather</h1>
-        <div style={{ backgroundColor: option === "optionOne" ? "Green" : "" }}>
-          <h2>{optionOneText}</h2>
-          <button onClick={selectHandler} value={"optionOne"}>
-            Choose Option One
-          </button>
-        </div>
-        <div style={{ backgroundColor: option === "optionTwo" ? "Green" : "" }}>
-          <h2>{optionTwoText}</h2>
-          <button onClick={selectHandler} value={"optionTwo"}>
-            Choose Option Two
-          </button>
-        </div>
+    <div className="flex flex-col items-center justify-center gap-4">
+      <Label className="text-lg">{`Poll by ${name}`}</Label>
+      <Avatar className="w-64 h-64 m-8">
+        <AvatarImage src={avatar} alt={`Avatar of ${name}`} />
+        <AvatarFallback>{name.substring(0, 2).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <Label className="text-lg ">Would You Rather</Label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+        <Card className=" space-y-4">
+          <CardContent className="p-6">
+            <Label className="text-base">{optionOneText}</Label>
+          </CardContent>
+          <Separator />
+          <CardFooter>
+            <Button
+              onClick={selectHandler}
+              value={"optionOne"}
+              className="w-full"
+              disabled={option === "optionOne"}
+            >
+              Choose Option One
+            </Button>
+          </CardFooter>
+        </Card>
+        <Card className=" space-y-4">
+          <CardContent className=" p-6 ">
+            <Label className="text-base">{optionTwoText}</Label>
+          </CardContent>
+          <Separator />
+          <CardFooter>
+            <Button
+              onClick={selectHandler}
+              value={"optionTwo"}
+              className="w-full"
+              disabled={option === "optionTwo"}
+            >
+              Choose Option Two
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
@@ -67,7 +93,6 @@ QuestionPage.propTypes = {
     id: PropTypes.string,
     avatar: PropTypes.string,
     name: PropTypes.string,
-    timestamp: PropTypes.number,
     votedOption: PropTypes.string,
     optionOneText: PropTypes.string,
     optionTwoText: PropTypes.string,
@@ -79,12 +104,11 @@ const mapStateToProps = ({ questions, users, authedUser }, props) => {
   const question = questions[id];
   const avatar = users[question.author].avatarURL;
   const name = users[question.author].name;
-  const timestamp = question.timestamp;
   const votedOption = question.optionOne.votes.includes(authedUser)
     ? "optionOne"
     : question.optionTwo.votes.includes(authedUser)
-    ? "optionTwo"
-    : null;
+      ? "optionTwo"
+      : null;
   const optionOneText = question.optionOne.text;
   const optionTwoText = question.optionTwo.text;
 
@@ -93,7 +117,6 @@ const mapStateToProps = ({ questions, users, authedUser }, props) => {
       id: question.id,
       avatar,
       name,
-      timestamp,
       votedOption,
       optionOneText,
       optionTwoText,

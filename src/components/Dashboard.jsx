@@ -44,31 +44,6 @@ const Dashboard = ({ doneQuestion, newQuestion }) => {
         </CardContent>
       </Card>
     </div>
-
-    // <div>
-    //   <div>
-    //     <h1>New Questions</h1>
-    //     <br />
-    //     <ul>
-    //       {newQuestion.map((id) => (
-    //         <li key={id}>
-    //           <Question id={id} />
-    //         </li>
-    //       ))}
-    //     </ul>
-    //   </div>
-    //   <div>
-    //     <h1>Done</h1>
-    //     <br />
-    //     <ul>
-    //       {doneQuestion.map((id) => (
-    //         <li key={id}>
-    //           <Question id={id} />
-    //         </li>
-    //       ))}
-    //     </ul>
-    //   </div>
-    // </div>
   );
 };
 
