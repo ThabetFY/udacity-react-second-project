@@ -28,6 +28,7 @@ const Nav = ({ dispatch, authedUser, avatar, name }) => {
           </li>
           <li>
             <img src={avatar} alt={`Avatar of ${name}`} className="avatar" />
+            <span>{name}</span>
             <button onClick={clickHanlder}>Logout</button>
           </li>
         </ul>

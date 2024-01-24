@@ -13,7 +13,7 @@ const Question = ({ question }) => {
   };
 
   if (question === null) {
-    return <p>{`This Tweet doesn't existd`}</p>;
+    return <p>{`This Question doesn't existd`}</p>;
   }
 
   const { id, avatar, name, timestamp } = question;
@@ -45,7 +45,6 @@ const mapStateToProps = ({ questions, users }, { id }) => {
 
 Question.propTypes = {
   question: PropTypes.object,
-  id: PropTypes.string.isRequired,
 };
 
 const connectedQuestion = connect(mapStateToProps)(Question);

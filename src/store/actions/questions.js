@@ -34,7 +34,7 @@ export function handleAddQuestion(question) {
   };
 }
 
-function addQuestionAnswer({ authedUser, qid, answer }) {
+function addQuestionAnswer(authedUser, qid, answer) {
   return {
     type: ADD_QUESTION_ANSWER,
     authedUser,
@@ -44,17 +44,16 @@ function addQuestionAnswer({ authedUser, qid, answer }) {
 }
 
 export function handleAddQuestionAnswer(qid, answer) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { authedUser } = getState();
-
     dispatch(showLoading());
+
+    dispatch(addQuestionAnswer(authedUser, qid, answer));
 
     return saveQuestionAnswer({
       qid,
       answer,
       authedUser,
-    })
-      .then((question) => dispatch(addQuestionAnswer(question)))
-      .then(() => dispatch(hideLoading()));
+    }).then(() => dispatch(hideLoading()));
   };
 }
