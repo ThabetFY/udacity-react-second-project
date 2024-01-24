@@ -178,12 +178,20 @@ function formatQuestion({ optionOneText, optionTwoText, author }) {
 
 export function _saveQuestion(question) {
   return new Promise((resolve, reject) => {
-    if (
-      !question.optionOneText ||
-      !question.optionTwoText ||
-      !question.author
-    ) {
-      reject("Please provide optionOneText, optionTwoText, and author");
+    if (!question.optionOneText) {
+      reject({
+        type: "optionOneText",
+        message: "Please provide optionOneText",
+      });
+    }
+    if (!question.optionTwoText) {
+      reject({
+        type: "optionTwoText",
+        message: "Please provide optionTwoText",
+      });
+    }
+    if (!question.author) {
+      reject({ type: "author", message: "Please provide author" });
     }
 
     const formattedQuestion = formatQuestion(question);

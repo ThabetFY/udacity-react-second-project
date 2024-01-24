@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen ">
-      <LoadingBar className="sticky" />
+      <LoadingBar />
       <Nav />
       <main className="container mx-auto flex justify-center items-center flex-1 mt-8">
         <Routes>

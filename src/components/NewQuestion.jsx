@@ -1,96 +1,125 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import { handleAddQuestion } from "../store/actions/questions";
 
-const NewQuestion = ({ dispatch }) => {
-  const [firstOption, setFirstOption] = useState("");
-  const [secondOption, setSecondOption] = useState("");
-  const [error, setError] = useState("");
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const formSchema = z.object({
+  firstOption: z.string().min(6, {
+    message: "First Option must be at least 6 characters.",
+  }),
+  secondOption: z.string().min(6, {
+    message: "Second Option must be at least 6 characters.",
+  }),
+});
+const NewQuestion = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange = (event) => {
-    if (event.target.name === "firstOption") {
-      setFirstOption(event.target.value);
-    } else if (event.target.name === "secondOption") {
-      setSecondOption(event.target.value);
-    }
-  };
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-  const handleBlur = (event) => {
-    event.preventDefault();
-    if (event.target.name === "firstOption") {
-      if (event.target.value === "") {
-        setError("First Option is required");
-      } else {
-        setError("");
-      }
-    } else if (event.target.name === "secondOption") {
-      if (event.target.value === "") {
-        setError("Second Option is required");
-      } else {
-        setError("");
-      }
+  const handleSubmit = async ({ firstOption, secondOption }) => {
+    try {
+      await dispatch(handleAddQuestion(firstOption, secondOption));
+      navigate("/");
+    } catch (error) {
+      form.setError(error.type, { message: error.message });
     }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (firstOption === "" || secondOption === "") {
-      setError("Both options are required");
-      return;
-    }
-    dispatch(handleAddQuestion(firstOption, secondOption))
-      .then(() => {
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err);
-      });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>First Option:</label>
-      <input
-        type="text"
-        name="firstOption"
-        placeholder="Enter First Option"
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      <br />
-      <label>Second Option:</label>
-      <input
-        type="text"
-        name="secondOption"
-        placeholder="Enter Second Option"
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      <br />
-      <input type="submit" value="Submit" />
-      {error && (
-        <p
-          style={{
-            color: "red",
-            fontSize: "1.2rem",
-            margin: "1rem 0",
-          }}
-        >
-          {error}
-        </p>
-      )}
-    </form>
+    <Card className="shadow-md rounded-lg w-1/2 text-center">
+      <CardHeader>
+        <CardTitle>Add new question</CardTitle>
+        <CardDescription className="text-balance">
+          Enter first option and second option to add new question
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 "
+          >
+            <FormField
+              control={form.control}
+              name="firstOption"
+              type="text"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Option</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter First Option"
+                      className="text-center"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.firstOption &&
+                      form.formState.errors.firstOption.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="secondOption"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Second Option</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Enter Second Option"
+                      className="text-center"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.secondOption &&
+                      form.formState.errors.secondOption.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <CardFooter className="pt-4 col-span-2">
+              <Button className="w-full " type="submit">
+                Submit
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 
-NewQuestion.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
-
-const connectedNewQuestion = connect()(NewQuestion);
-
-export default connectedNewQuestion;
+export default NewQuestion;
