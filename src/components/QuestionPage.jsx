@@ -24,20 +24,21 @@ const withRouter = (Component) => {
 
 function QuestionPage({ dispatch, question }) {
   const [option, setOption] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setOption(question.votedOption);
-  }, [question.votedOption]);
+    setOption(question ? question.votedOption : "");
+  }, []);
 
-  if (question === null) {
-    return <p>{"This Question doesn't exist"}</p>;
+  if (!question) {
+    navigate("/login");
+    return;
   }
 
   const { id, avatar, name, optionOneText, optionTwoText } = question;
 
   const selectHandler = (e) => {
     e.preventDefault();
-    setOption(e.target.value);
     dispatch(handleAddQuestionAnswer(id, e.target.value));
   };
 
@@ -102,6 +103,11 @@ QuestionPage.propTypes = {
 const mapStateToProps = ({ questions, users, authedUser }, props) => {
   const { id } = props.router.params;
   const question = questions[id];
+  if (!question) {
+    return {
+      question: null,
+    };
+  }
   const avatar = users[question.author].avatarURL;
   const name = users[question.author].name;
   const votedOption = question.optionOne.votes.includes(authedUser)

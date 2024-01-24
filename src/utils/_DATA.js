@@ -222,6 +222,7 @@ export function _saveQuestionAnswer({ authedUser, qid, answer }) {
     }
 
     setTimeout(() => {
+      const oldAnswer = users[authedUser].answers[qid];
       users = {
         ...users,
         [authedUser]: {
@@ -237,6 +238,14 @@ export function _saveQuestionAnswer({ authedUser, qid, answer }) {
         ...questions,
         [qid]: {
           ...questions[qid],
+
+          [oldAnswer ?? answer]: {
+            ...questions[qid][oldAnswer ?? answer],
+            votes: questions[qid][oldAnswer ?? answer].votes.filter(
+              (user) => user !== authedUser,
+            ),
+          },
+
           [answer]: {
             ...questions[qid][answer],
             votes: questions[qid][answer].votes.concat([authedUser]),

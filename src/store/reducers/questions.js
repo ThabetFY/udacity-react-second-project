@@ -19,8 +19,27 @@ export default function questions(state = {}, action) {
         [action.question.id]: action.question,
       };
     }
+
     case ADD_QUESTION_ANSWER: {
-      console.log(state);
+      const answeredOptionOne = state[action.qid].optionOne.votes.includes(
+        action.authedUser,
+      );
+      const answeredOptionTwo = state[action.qid].optionTwo.votes.includes(
+        action.authedUser,
+      );
+
+      // Reset the old answer
+      if (answeredOptionOne) {
+        state[action.qid].optionOne.votes = state[
+          action.qid
+        ].optionOne.votes.filter((user) => user !== action.authedUser);
+      } else if (answeredOptionTwo) {
+        state[action.qid].optionTwo.votes = state[
+          action.qid
+        ].optionTwo.votes.filter((user) => user !== action.authedUser);
+      }
+
+      // Add the new answer
       return {
         ...state,
         [action.qid]: {
@@ -34,6 +53,7 @@ export default function questions(state = {}, action) {
         },
       };
     }
+
     default:
       return state;
   }
