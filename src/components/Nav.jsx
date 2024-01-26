@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "./mode-toggle";
 
 const Nav = ({ authedUser, avatar, name }) => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const Nav = ({ authedUser, avatar, name }) => {
   };
 
   return (
-    <div className="border-b">
+    <div className="border-b bg-secondary">
       {authedUser && (
         <div className="flex h-16 items-center px-4">
           <div className="mx-6">
@@ -52,6 +53,7 @@ const Nav = ({ authedUser, avatar, name }) => {
             </nav>
           </div>
           <div className="ml-auto flex items-center space-x-4">
+            <ModeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
