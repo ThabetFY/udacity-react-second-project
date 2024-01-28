@@ -4,6 +4,11 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: "happy-dom",
+    setupFiles: ["src/setupTest.js"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

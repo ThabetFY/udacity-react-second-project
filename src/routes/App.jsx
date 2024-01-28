@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" element={withLoggedOut(Login)()} />
           <Route path="/leaderboard" element={withLoggedIn(Leaderboard)()} />
           <Route path="/new" element={withLoggedIn(NewQuestion)()} />
-          <Route path="/Question/:id" element={withLoggedIn(QuestionPage)()} />
+          <Route path="/question/:id" element={withLoggedIn(QuestionPage)()} />
           <Route path="*" element={<_404 />} />
         </Routes>
       </main>
