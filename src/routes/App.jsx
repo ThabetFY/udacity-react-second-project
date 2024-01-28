@@ -1,10 +1,7 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import LoadingBar from "react-redux-loading-bar";
 import { Routes, Route } from "react-router-dom";
 
-import { handleInitialData } from "../store/actions/shared";
-import Dashboard from "../components/Dashboard";
+import Dashboard from "./Dashboard";
 import Leaderboard from "./Leaderboard";
 import NewQuestion from "./NewQuestion";
 import QuestionPage from "./QuestionPage";
@@ -14,13 +11,6 @@ import { withLoggedIn, withLoggedOut } from "@/components/withLoggedIn";
 import _404 from "./404";
 
 function App() {
-  const dispatch = useDispatch();
-  const authedUser = useSelector((state) => state.authedUser);
-
-  useEffect(() => {
-    dispatch(handleInitialData(authedUser));
-  }, []);
-
   return (
     <div className="flex flex-col min-h-screen">
       <LoadingBar />

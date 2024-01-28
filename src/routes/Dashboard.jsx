@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-import Question from "./Question";
+import Question from "../components/Question";
 
 import {
   Card,
@@ -12,8 +12,17 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
+import { handleInitialData } from "@/store/actions/shared";
 
 const Dashboard = ({ doneQuestion, newQuestion }) => {
+  const dispatch = useDispatch();
+  const authedUser = useSelector((state) => state.authedUser);
+
+  useEffect(() => {
+    dispatch(handleInitialData(authedUser));
+  }, [authedUser, dispatch]);
+
   return (
     <Tabs
       defaultValue="New Questions"
