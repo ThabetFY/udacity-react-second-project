@@ -27,8 +27,11 @@ function QuestionPage({ dispatch, question }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!question) {
+      navigate("*");
+    }
     setOption(question ? question.votedOption : "");
-  }, [question ? question.votedOption : ""]);
+  }, [question, navigate]);
 
   if (!question) {
     navigate("/login");

@@ -6,8 +6,8 @@ export default function _404() {
     <div className="flex flex-col gap-4 justify-center items-center">
       <h1>404 page not found</h1>
       <Button asChild>
-        <Link className="" to="/login">
-          Go to login page
+        <Link className="" to="/">
+          Go to Home page
         </Link>
       </Button>
     </div>
