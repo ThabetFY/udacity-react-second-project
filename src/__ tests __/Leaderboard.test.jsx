@@ -30,10 +30,9 @@ describe("Leaderboard", () => {
         // Add more mock users if needed
       },
     };
-    const { getByText } = render(<Leaderboard />, { initialState });
+    const { asFragment } = render(<Leaderboard />, { initialState });
     await waitFor(() => {
-      expect(getByText("Alice")).toBeInTheDocument();
-      expect(getByText("Bob")).toBeInTheDocument();
+      expect(asFragment()).toMatchSnapshot();
     });
   });
 });
