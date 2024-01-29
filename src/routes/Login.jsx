@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -37,6 +37,7 @@ const formSchema = z.object({
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -49,7 +50,11 @@ const Login = () => {
   const handleSubmit = async ({ username, password }) => {
     try {
       await dispatch(handleLogin(username, password));
-      navigate("/");
+      if (location.state?.from?.pathname) {
+        navigate(location.state.from.pathname);
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       form.setError(error.type, { message: error.message });

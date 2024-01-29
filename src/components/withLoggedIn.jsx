@@ -1,14 +1,11 @@
+import { useLocation } from "react-router-dom";
 import { withCondition } from "./withCondition";
 import { useSelector } from "react-redux";
 
 /** A higher-order wrapper, binding the "user logged in" condition and redirect */
-export const withLoggedIn = (Component) =>
-  withCondition(
-    Component,
-    useSelector((state) => state.authedUser),
-    "/login",
-  );
+export const withLoggedIn = (Component) => {
+  const condition = useSelector((state) => state.authedUser);
+  const location = useLocation();
 
-/** The inverse, showing a page only if a user is logged OUT */
-export const withLoggedOut = (Component) =>
-  withCondition(Component, !useSelector((state) => state.authedUser), "/");
+  return withCondition(Component, condition, "/login", location);
+};
