@@ -12,7 +12,7 @@ This is a web application called "Would You Rather" where users can participate 
 
 - New poll: Users can create a new poll with two options.
 
-- Leaderboard: Users can view the leaderboard of users based on their activity and number of polls answered.
+- Leaderboard: Users can view the leaderboard of users based on their activity and the number of polls answered.
 
 - Navigation: Users can navigate between different pages using the navigation menu.
 
@@ -33,7 +33,7 @@ To run the app locally:
 1. Clone the repository: `git clone <repo-url>`
 2. Install dependencies: `npm install`
 3. Start the dev server: `npm run dev`
-4. Open http://localhost:5174 in your browser
+4. Open http://localhost:5173 in your browser
 
 ## Project Structure
 
@@ -53,6 +53,6 @@ Some ways this project could be improved:
 - Implement live polling updates
 - Add more visualizations for poll results
 - Improve styling and UI/UX
-- Add ability to edit/delete polls
+- Add the ability to edit/delete polls
 - Implement server-side rendering
 - Add unit and integration tests
